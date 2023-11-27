@@ -1,0 +1,257 @@
+#include <Wire.h>
+#include <Adafruit_SSD1306.h>
+#include <LOLIN_I2C_BUTTON.h>
+
+#define OLED_RESET 0 // GPIO0
+Adafruit_SSD1306 display(OLED_RESET);
+
+#define SDA_PIN 32  // Change this to the desired GPIO for SDA
+#define SCL_PIN 27  // Change this to the desired GPIO for SCL
+
+
+
+I2C_BUTTON button(DEFAULT_I2C_BUTTON_ADDRESS); 
+
+//String keyString[] = {"None", "Press", "Long", "Double", "Hold"};
+
+
+enum class State{
+  ID,
+  Info,
+  Plats
+};
+
+
+
+class StateMachine{
+private:
+  State currentState;
+
+  public:
+    StateMachine(): currentState(State::ID ){}
+
+  
+  void transition(State nextState){
+    currentState = nextState;
+  }
+
+
+  void performAction(){
+
+    switch (currentState)
+    {
+    case State::ID:
+
+      display.clearDisplay();
+      display.setCursor(30,25);
+      display.println("ID!");
+
+      Serial.println("ID");
+
+      display.display();
+      delay(5000);
+
+      transition(State::Info);
+
+      break;
+
+    case State::Info:
+
+      display.clearDisplay();
+      display.setCursor(30,25);
+      display.println("Info!");
+
+      Serial.println("Info");
+
+      display.display();
+
+      delay(5000);
+
+      transition(State::Plats);
+
+      break;
+
+    case State::Plats:
+
+      display.clearDisplay();
+      display.setCursor(30,25);
+      display.println("Plats!");
+
+      Serial.println("Plats");
+
+      display.display();
+
+      delay(5000);
+
+      transition(State::ID);
+
+      break;
+
+
+  }
+
+
+
+}
+
+
+
+};
+
+void setup() {
+  Serial.begin(115200);
+
+  // Set custom SDA and SCL pins for Wire library
+  Wire.begin(SDA_PIN, SCL_PIN);
+
+  // Initialize the display
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+
+  // init done
+  display.display();
+  delay(2000);
+
+  // Clear the buffer.
+  display.clearDisplay();
+
+  // Text display tests
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(30, 25);
+  display.println("Hello, ");
+  display.setCursor(40,25);
+  display.println("World!");
+  display.display();
+  delay(2000);
+  display.clearDisplay();
+  display.display();
+
+
+
+}
+
+
+
+void loop() 
+{
+  static StateMachine StateMachine;
+
+  StateMachine.performAction();
+
+
+
+    
+
+/*
+    if (button.get() == 0) // Button press
+  {
+      if (button.BUTTON_A)
+      {
+        display.println("A: ");
+        display.println(keyString[button.BUTTON_A]);
+      }
+
+      if (button.BUTTON_B)
+      {
+        display.println("B: ");
+        display.println(keyString[button.BUTTON_B]);
+      }
+        
+  }
+
+*/
+
+
+}
+
+
+
+//TESTA KNAPPAAAAR
+
+
+/*
+    Display button value on OLED
+*/
+
+#include <Wire.h>
+#include <LOLIN_I2C_BUTTON.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+
+
+#define SDA_PIN 32  // Change this to the desired GPIO for SDA
+#define SCL_PIN 27
+
+//0x31
+#define OLED_RESET -1
+Adafruit_SSD1306 display(OLED_RESET);
+
+
+
+
+
+// I2C_BUTTON button; //I2C address 0x31
+// I2C_BUTTON button(your_address); //using customize I2C address
+
+String keyString[] = {"None", "Press", "Long", "Double", "Hold"};
+
+  I2C_BUTTON button(DEFAULT_I2C_BUTTON_ADDRESS); //I2C Address 0x31
+
+void setup()
+{
+    //Wire.begin(SDA_PIN, SCL_PIN);
+  
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(40, 20);
+    display.setTextColor(WHITE);
+    display.display();
+
+
+}
+
+void loop()
+{
+    Serial.begin(115200);
+
+    if (button.get() == 0) // Button press
+    {
+        
+        if (button.BUTTON_A)
+        {
+            
+            display.setCursor(40, 20);
+            
+            display.println("A: ");
+            Serial.println("A");
+            
+
+        }
+
+        if (button.BUTTON_B)
+        {
+            display.setCursor(40, 10);
+
+
+            display.println("B: ");
+            Serial.println("B");
+            
+
+        }
+        
+    }
+    else
+    {
+        display.println("Test...");
+    }
+
+    display.display();
+    
+
+}
+
+
+/////////////////////////////
