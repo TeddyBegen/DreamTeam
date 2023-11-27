@@ -1,4 +1,5 @@
 # University
-Project I have done by myself or participated in during my time at Malmö University
 
-I will add some of my past current and future projects to this repository
+Dreamteam:
+  Dreamteam is the project for my course Ingenjörsprojekt med programvaruteknik, DA272A. Code for the oled displays used in the project to display information about our nodes on a physical display.
+
